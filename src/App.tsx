@@ -5,20 +5,14 @@ import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <div className="flex flex-col bg-gray-100 w-full h-screen justify-between">
-      <div className="flex flex-col gap-y-5 h-5/6">
-        <div className="h-1/6 shrink-0 bg-blue-600">
+    <div className="flex flex-col h-screen w-full bg-neutral-950 text-white">
+      <main className="relative flex-1 min-h-0">
+        <header className="absolute inset-x-0 top-0 z-20">
           <Navbar />
-        </div>
-      
-        <div className="flex-1 min-h-0 bg-pink-400">
-          <HeroSection />
-        </div>
-      </div>
-
-      <div className="h-1/6 bg-green-300">
-        <Footer />
-      </div>
+        </header>
+        <HeroSection />
+      </main>
+      <Footer />
     </div>
   );
 }
