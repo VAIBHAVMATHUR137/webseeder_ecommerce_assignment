@@ -4,17 +4,17 @@ import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import { type AppDispatch, type RootState } from "./Redux/Store";
-import { individualProductThunk } from "./Redux/Slice";
+import { allProductsThunk, individualProductThunk } from "./Redux/Slice";
+import { useEffect } from "react";
 
 function App() {
-  const dispatch=useDispatch<AppDispatch>();
-  const productState=useSelector((state:RootState)=>state.individualProduct)
-  async function handleAPI(){
-    const trigger=await dispatch(individualProductThunk({productID:138})).unwrap()
-    console.log(trigger)
-    const res=productState.productData;
-    console.log(res)
-
+  const dispatch = useDispatch<AppDispatch>();
+  const allProducts=useSelector((state:RootState)=>state.allProducts.productData)
+  useEffect(() => {
+    dispatch(allProductsThunk()).unwrap()
+  }, [dispatch]);
+  async function handleAPI() {
+    console.log(allProducts)
   }
   return (
     <div className="flex flex-col h-screen w-full bg-neutral-950 text-white">
@@ -23,7 +23,7 @@ function App() {
           <Navbar />
         </header>
         <HeroSection />
-        <button onClick={()=>handleAPI()}>HandleAPI</button>
+        <button onClick={() => handleAPI()}>HandleAPI</button>
       </main>
       <Footer />
     </div>
