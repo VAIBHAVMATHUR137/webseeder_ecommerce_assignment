@@ -4,20 +4,27 @@ import { Link, useParams } from "react-router";
 
 import { type AppDispatch, type RootState } from "../Redux/Store";
 
-import { addToCart, individualProductThunk } from "../Redux/Slice";
+import {
+  addToCart,
+  toggleWishlist,
+  individualProductThunk,
+} from "../Redux/Slice";
 import Navbar from "../components/Navbar";
 
 const IndividualProduct = () => {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.cartItems);
+  const wishlist = useSelector(
+    (state: RootState) => state.wishlist.wishlistItems,
+  );
   const {
     productData: product,
     isLoading,
     isFail,
     error,
   } = useSelector((state: RootState) => state.individualProduct);
-  console.log(cart);
+
   useEffect(() => {
     if (id) {
       dispatch(
@@ -56,8 +63,11 @@ const IndividualProduct = () => {
       </div>
     );
   }
+
   const quantityInCart =
     cart.find((item) => item.id === product.id)?.quantity ?? 0;
+  const isWishlisted = wishlist.includes(product.id);
+
   return (
     <>
       <Navbar />
@@ -138,6 +148,7 @@ const IndividualProduct = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   className="flex-1 text-center bg-white text-black font-semibold py-4 rounded-xl hover:bg-neutral-300 transition cursor-pointer"
@@ -148,15 +159,18 @@ const IndividualProduct = () => {
                     : "Add to Cart"}
                 </button>
 
-                <button className="flex-1 text-center border border-neutral-600 text-white font-semibold py-4 rounded-xl hover:bg-neutral-800 transition cursor-pointer">
-                  ♡ Wishlist
+                <button
+                  className="flex-1 text-center border border-neutral-600 text-white font-semibold py-4 rounded-xl hover:bg-neutral-800 transition cursor-pointer"
+                  onClick={() => dispatch(toggleWishlist(product.id))}
+                >
+                  {isWishlisted ? "♥ Wishlisted" : "♡ Wishlist"}
                 </button>
               </div>
 
               {/* Back to Catalogue */}
               <Link
                 to="/productListing"
-                className="w-full text-center bg-white text-black font-semibold py-4 rounded-xl hover:bg-neutral-300 transition"
+                className="block w-full text-center bg-white text-black font-semibold py-4 rounded-xl hover:bg-neutral-300 transition"
               >
                 Continue Exploring
               </Link>
