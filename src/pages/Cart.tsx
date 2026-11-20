@@ -11,6 +11,7 @@ import {
   removeFromCart,
   resetCart,
 } from "../Redux/Slice";
+import Navbar from "../components/Navbar";
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -41,7 +42,7 @@ const Cart = () => {
     0,
   );
 
-  const totalUnits = cartProducts.reduce((n, { quantity }) => n + quantity, 0);
+
 
   if (isLoading) {
     return (
@@ -67,6 +68,8 @@ const Cart = () => {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-neutral-950 text-white px-5 md:px-10 py-12">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-10">Your Cart</h1>
@@ -186,6 +189,7 @@ const Cart = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

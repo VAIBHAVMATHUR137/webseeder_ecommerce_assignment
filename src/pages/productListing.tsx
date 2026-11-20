@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import { type AppDispatch, type RootState } from "../Redux/Store";
 
 import { allProductsThunk } from "../Redux/Slice";
+import Navbar from "../components/Navbar";
 
 const ProductListing = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -59,6 +60,8 @@ const ProductListing = () => {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-neutral-950 text-white px-5 md:px-10 py-12">
       {/* Page Header */}
       <div className="max-w-7xl mx-auto mb-10">
@@ -125,6 +128,7 @@ const ProductListing = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 
