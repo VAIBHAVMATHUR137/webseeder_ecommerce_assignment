@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../api/api";
 import axios from "axios";
+import {type PayloadAction } from "@reduxjs/toolkit";
 
 interface Dimensions {
   width?: number;
@@ -193,3 +194,103 @@ export const allProductSlice = createSlice({
 
 export const allProductsReducer = allProductSlice.reducer;
 
+// State management for cart
+interface CartItem {
+  id: number;
+  quantity: number;
+}
+
+interface Cart {
+  cartItems: CartItem[];
+}
+
+const cartInitialState: Cart = { cartItems: [] };
+
+export const cartSlice = createSlice({
+  name: "cartSlice",
+  initialState: cartInitialState,
+  reducers: {
+    addToCart: (state, action: PayloadAction<number>) => {
+      const item = state.cartItems.find((i) => i.id === action.payload);
+      if (item) {
+        item.quantity += 1;
+      } else {
+        state.cartItems.push({ id: action.payload, quantity: 1 });
+      }
+    },
+
+    decrementQuantity: (state, action: PayloadAction<number>) => {
+      const item = state.cartItems.find((i) => i.id === action.payload);
+      if (!item) return;
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+      } else {
+        state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
+      }
+    },
+
+    setQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
+      const { id, quantity } = action.payload;
+      if (quantity <= 0) {
+        state.cartItems = state.cartItems.filter((i) => i.id !== id);
+        return;
+      }
+      const item = state.cartItems.find((i) => i.id === id);
+      if (item) item.quantity = quantity;
+    },
+
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
+    },
+
+    resetCart: (state) => {
+      state.cartItems = [];
+    },
+  },
+});
+
+export const { addToCart, decrementQuantity, setQuantity, removeFromCart, resetCart } =
+  cartSlice.actions;
+export const cartReducer=cartSlice.reducer
+
+
+// State management for wishlist
+
+interface Wishlist {
+  wishlistItems: number[];
+}
+
+const wishlistInitialState: Wishlist = {
+  wishlistItems: [],
+};
+
+export const wishlistSlice = createSlice({
+  name: "wishlistSlice",
+  initialState: wishlistInitialState,
+
+  reducers: {
+    addToWishlist: (state, action) => {
+      if (!state.wishlistItems.includes(action.payload)) {
+        state.wishlistItems.push(action.payload);
+      }
+    },
+
+    removeFromWishlist: (state, action) => {
+      state.wishlistItems = state.wishlistItems.filter(
+        (id) => id !== action.payload
+      );
+    },
+
+    resetWishlist: (state) => {
+      state.wishlistItems = [];
+    },
+  },
+});
+
+export const {
+  addToWishlist,
+  removeFromWishlist,
+  resetWishlist,
+} = wishlistSlice.actions;
+
+export const wishlistReducer = wishlistSlice.reducer;
