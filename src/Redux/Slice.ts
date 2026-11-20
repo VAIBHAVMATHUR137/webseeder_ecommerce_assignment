@@ -19,6 +19,7 @@ interface individualProduct {
   id: number;
   dimensions: Dimensions;
   price: number;
+  thumbnail:string
 }
 const initialIndividualProductState: individualProduct = {
   title: "",
@@ -26,6 +27,7 @@ const initialIndividualProductState: individualProduct = {
   id: 0,
   price: 0,
   dimensions: initialDimensions,
+  thumbnail:""
 };
 interface ApiResponse {
   products: individualProduct[];
