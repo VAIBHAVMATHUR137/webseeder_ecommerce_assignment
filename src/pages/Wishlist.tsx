@@ -112,6 +112,7 @@ const Wishlist = () => {
                   0;
 
                 return (
+<Link to={`/product/${product.id}`}>
                   <div
                     key={product.id}
                     className="group bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden hover:border-neutral-600 transition"
@@ -165,6 +166,7 @@ const Wishlist = () => {
                       </div>
                     </div>
                   </div>
+                  </Link>
                 );
               })}
             </div>

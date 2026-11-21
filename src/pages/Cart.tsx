@@ -90,10 +90,12 @@ const Cart = () => {
             </Link>
           </div>
         ) : (
+       
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Cart Products */}
             <div className="lg:col-span-2 flex flex-col gap-5">
               {cartProducts.map(({ product, quantity }) => (
+                <Link to={`/product/${product.id}`}>
                 <div
                   key={product.id}
                   className="flex flex-col sm:flex-row gap-5 bg-neutral-900 border border-neutral-800 rounded-2xl p-5"
@@ -154,8 +156,11 @@ const Cart = () => {
                       </div>
                     </div>
                   </div>
+                  
                 </div>
+                </Link>
               ))}
+              
             </div>
 
             {/* Cart Summary */}
