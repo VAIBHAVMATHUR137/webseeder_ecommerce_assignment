@@ -1,5 +1,5 @@
 import hero from "../images/hero.jpg";
-
+import { Link } from "react-router";
 export const HeroSection = () => {
   return (
     <section className="relative h-full w-full overflow-hidden">
@@ -18,9 +18,11 @@ export const HeroSection = () => {
         <p className="mt-3 max-w-md text-base text-white/80 md:text-lg">
           Gear built for the court. Find your next favorite racket.
         </p>
+      <Link to ="/productListing">
         <button className="mt-6 w-fit rounded-full bg-lime-300 px-6 py-3 text-sm font-semibold text-neutral-900 hover:bg-lime-200 transition-colors">
           Shop now
-        </button>
+        </button></Link>
+        
       </div>
     </section>
   );
