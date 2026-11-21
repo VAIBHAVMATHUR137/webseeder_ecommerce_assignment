@@ -1,78 +1,87 @@
-# React + TypeScript + Vite
+# Sports Store
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sports accessories e-commerce frontend with product browsing, a cart with quantities, a wishlist, and client-side routing. State is managed with Redux Toolkit, and the cart and wishlist persist across reloads via localStorage.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + TypeScript (Vite)
+- Redux Toolkit and React Redux
+- React Router
+- Axios
+- Tailwind CSS
+- lucide-react (icons)
 
-## React Compiler
+## Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Navbar** with icon links to Home, Products, Wishlist and Cart. Live badges show total cart units and wishlist count. The bar is transparent over the home hero and solid and sticky on other pages. The active page is highlighted.
+- **Product listing** of the sports accessories catalogue.
+- **Product details** page with image, description, price and dimensions.
+- **Cart**
+  - Add the same product multiple times (e.g. 5 baseball bats).
+  - Increase or decrease quantity, remove an item, or clear the cart.
+  - Line totals and an order summary based on quantity.
+- **Wishlist**
+  - Toggle a product from its detail page.
+  - Move items to the cart or remove them.
+- **Persistence:** cart and wishlist are saved to localStorage and restored on reload.
+- **Error page** that handles 404s and unexpected errors, with links back home and to products.
+- Loading and error states with a retry option on data-driven pages.
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+## Routes
 
-## Expanding the ESLint configuration
+| Path               | Page               |
+| ------------------ | ------------------ |
+| `/`                | Home               |
+| `/productListing`  | Product listing    |
+| `/product/:id`     | Product details    |
+| `/cart`            | Cart               |
+| `/wishlist`        | Wishlist           |
+| any other path     | Error page         |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Redux Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Defined in `src/Redux/Slice.ts` and combined in `src/Redux/Store.ts`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Store key           | Purpose                                                        |
+| ------------------- | -------------------------------------------------------------- |
+| `allProducts`       | Fetches the full catalogue (`allProductsThunk`)                |
+| `individualProduct` | Fetches a single product (`individualProductThunk`)            |
+| `cart`              | `cartItems: { id, quantity }[]`                                |
+| `wishlist`          | `wishlistItems: number[]` (product IDs)                        |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Cart actions:** `addToCart`, `decrementQuantity`, `setQuantity`, `removeFromCart`, `resetCart`
 
+**Wishlist actions:** `addToWishlist`, `removeFromWishlist`, `toggleWishlist`, `resetWishlist`
+
+The cart and wishlist store only product IDs (and quantity for the cart). Full product details are resolved from the fetched catalogue at render time, so price and title are never stale.
+
+`Store.ts` loads `cart` and `wishlist` from localStorage as the preloaded state and writes them back on every store update.
+
+## Getting Started
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+The app runs at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
 
 ```
+src/
+├── api/            # API endpoint config
+├── components/     # Navbar
+├── pages/          # Cart, Wishlist, ProductListing, IndividualProduct, Error
+├── Redux/          # Slice.ts, Store.ts
+├── App.tsx         # Home page
+├── main.tsx        # Router and Redux Provider setup
+└── index.css
+```
+
+## Possible Improvements
+
+- Order history page
+- Checkout flow
+- Search, filtering and sorting on the listing page
+- Persist the catalogue to avoid refetching on each visit
